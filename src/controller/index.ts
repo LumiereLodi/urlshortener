@@ -18,21 +18,20 @@ export const shortenUrl: RequestHandler = catchAsync(async (req, res) => {
     const url = await existingUrl(urlInput);
     if (url) {
       res.status(httpStatus.OK).json(url);
-      return
+      return;
     }
     const newShortUrl = await addNewShortUrl(urlInput);
     res.status(httpStatus.CREATED).json(newShortUrl);
-    return
+    return;
   }
 });
 
 export const redirectUrl: RequestHandler = catchAsync(async (req, res) => {
-  const shorturl = req.params.shorturl
-  const url = await Url.findOne({ where: { shortUrl: shorturl} });
+  const shorturl = req.params.shorturl;
+  const url = await Url.findOne({ where: { shortUrl: shorturl } });
   if (url) {
-    res.redirect(url.get('originalUrl') as string);
-    return
-    
+    res.redirect(url.get("originalUrl") as string);
+    return;
   } else {
     throw new ApiError(httpStatus.NOT_FOUND, "Short URL not found", {
       url: url,
