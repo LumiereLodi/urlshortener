@@ -5,7 +5,7 @@ import { logger } from "@server/config/logger";
 import ApiError from "@server/utils/ApiError";
 import httpStatus from "http-status";
 
-interface SavedUrl {
+interface UrlSchema {
   originalUrl: string;
   shortUrl: string;
 }
@@ -35,7 +35,7 @@ export const isPayloadValid = (payload: Payload) => {
 
 export const existingUrl = async (
   originalUrl: string
-): Promise<SavedUrl | undefined> => {
+): Promise<UrlSchema | undefined> => {
   const existingUrl = await Url.findOne({ where: { originalUrl } });
   if (existingUrl)
     return {
