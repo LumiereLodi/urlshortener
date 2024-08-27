@@ -3,7 +3,7 @@ import {
   getShortUrl,
   isPayloadValid,
   isValidUrl,
-  urlExist,
+  existingUrl,
 } from "../../src/helper.ts/url";
 import httpStatus from "http-status";
 import Url from "@server/model/url";
@@ -56,7 +56,7 @@ describe("Testing URL services", () => {
       }),
     } as any);
 
-    const result = await urlExist("https://www.youtube.com/");
+    const result = await existingUrl("https://www.youtube.com/");
     expect(result).toMatchObject({
       originalUrl: "https://www.youtube.com/",
       shortUrl: "iOFoxfKE",
@@ -71,7 +71,7 @@ describe("Testing URL services", () => {
       createdAt: "2024-08-26T17:54:44.436Z",
     } as any);
 
-    const result = await urlExist("https://www.youtube.com/");
+    const result = await existingUrl("https://www.youtube.com/");
     expect(result).toMatchObject({
       originalUrl: "https://www.youtube.com/",
       shortUrl: new RegExp(/^/) as any,

@@ -33,7 +33,7 @@ export const isPayloadValid = (payload: Payload) => {
   return result.data.url;
 };
 
-export const urlExist = async (
+export const existingUrl = async (
   originalUrl: string
 ): Promise<SavedUrl | undefined> => {
   const existingUrl = await Url.findOne({ where: { originalUrl } });
@@ -47,12 +47,10 @@ export const urlExist = async (
 
 export const addNewShortUrl = async (originalUrl: string) => {
   const shortUrl = getShortUrl();
-
   const newUrl = await Url.create({
     originalUrl,
     shortUrl,
     createdAt: new Date(),
   });
-
   return newUrl;
 };

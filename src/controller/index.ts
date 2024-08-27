@@ -2,7 +2,7 @@ import {
   addNewShortUrl,
   isPayloadValid,
   isValidUrl,
-  urlExist,
+  existingUrl,
 } from "@server/helper.ts/url";
 import Url from "@server/model/url";
 import ApiError from "@server/utils/ApiError";
@@ -11,16 +11,18 @@ import { RequestHandler } from "express";
 import httpStatus from "http-status";
 
 export const shortenUrl: RequestHandler = catchAsync(async (req, res) => {
-  const url = isPayloadValid(req.body);
-  const valideUrl = isValidUrl(url);
+  const urlInput = isPayloadValid(req.body);
+  const valideUrl = isValidUrl(urlInput);
 
   if (valideUrl) {
-    const existingUrl = await urlExist(url);
-    if (existingUrl) {
-      res.status(httpStatus.OK).json(existingUrl);
+    const url = await existingUrl(urlInput);
+    if (url) {
+      res.status(httpStatus.OK).json(url);
+      return
     }
-    const newShortUrl = await addNewShortUrl(url);
+    const newShortUrl = await addNewShortUrl(urlInput);
     res.status(httpStatus.CREATED).json(newShortUrl);
+    return
   }
 });
 
@@ -29,6 +31,8 @@ export const redirectUrl: RequestHandler = catchAsync(async (req, res) => {
   const url = await Url.findOne({ where: { shortUrl: shorturl} });
   if (url) {
     res.redirect(url.get('originalUrl') as string);
+    return
+    
   } else {
     throw new ApiError(httpStatus.NOT_FOUND, "Short URL not found", {
       url: url,
